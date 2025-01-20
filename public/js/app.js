@@ -125,7 +125,7 @@ function checkDashboard() {
         type: "post",
         headers: { 'Authorization': 'Bearer '+token },
         success:function(response){
-            // window.location.replace("index.html");
+            window.location.replace("user.html");
         }
     });
   }
