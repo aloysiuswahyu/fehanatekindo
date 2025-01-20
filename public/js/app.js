@@ -20,6 +20,33 @@ $('.btnlogin').click(function(){
         }
     });
 })
+$('.btnEdit').click(function(){
+    var q =  new URLSearchParams(window.location.search);
+    var id = q.get('edit') ?? '';
+    console.log(q.get('edit')); // price_descending
+    name = $('.name').val();
+    email = $('.email').val();
+    password = $('.password').val();
+    console.log(email);
+    $.ajax({
+
+        url: "http://apihanatekindo.test/api/user/update/"+id,
+        type: "POST",
+        headers: { 'Authorization': 'Bearer '+token },
+        data: {
+            "name": name,
+            "email": email,
+            "password": password
+        },
+
+        success:function(response){
+            console.log(response.token,'token');
+            localStorage.setItem("ctoken", response.token);
+            setCookie('ctoken',response.token,'3000')
+           
+        }
+    });
+})
 
 function setCookie(cname, cvalue, exdays) {
     const d = new Date();
@@ -33,12 +60,16 @@ function setCookie(cname, cvalue, exdays) {
  
 })
 function getCookie(){
-    return localStorage.getItem("ctoken");
+    return localStorage.getItem("ctoken") ?? '';
 }
 function checkToken(){
-    token = getCookie();
-    if(token==''){
+   var token = getCookie() ?? '';
+    console.log(token,'oook')
+    if ( !token ) {
+        console.log('sssssinsi')
         window.location.href = "/index.html";
+        window.location.replace("/index.html");
+        location.href = 'index.html';
     }
 }
 function checkDashboard() {
@@ -48,7 +79,7 @@ function checkDashboard() {
 
         url: "http://apihanatekindo.test/api/dashboard",
         type: "GET",
-        headers: { 'Authorization': 'Bearer 7|fHgU0nsNzUjqc4rQfWw5z1SVNY4mhfSPxOEaqTXh04c9e8e3' },
+        headers: { 'Authorization': 'Bearer '+token },
         success:function(response){
 
             console.log(response,'token');
@@ -64,7 +95,7 @@ function checkDashboard() {
 
         url: "http://apihanatekindo.test/api/user",
         type: "GET",
-        headers: { 'Authorization': 'Bearer 7|fHgU0nsNzUjqc4rQfWw5z1SVNY4mhfSPxOEaqTXh04c9e8e3' },
+        headers: { 'Authorization': 'Bearer '+token },
         success:function(response){
              listUser = '';
             response.data.forEach(val => {
@@ -85,13 +116,15 @@ function checkDashboard() {
     });
   }
   function getUserData() {
+    var q =  new URLSearchParams(window.location.search);
+    var id = q.get('edit') ?? '';
     token  = getCookie();
     console.log(token,'masuk')
     $.ajax({
 
-        url: "http://apihanatekindo.test/api/user",
+        url: "http://apihanatekindo.test/api/user/detail/"+id,
         type: "GET",
-        headers: { 'Authorization': 'Bearer 7|fHgU0nsNzUjqc4rQfWw5z1SVNY4mhfSPxOEaqTXh04c9e8e3' },
+        headers: { 'Authorization': 'Bearer '+token },
         success:function(response){
              listUser = '';
             response.data.forEach(val => {
